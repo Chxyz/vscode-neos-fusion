@@ -1,6 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { FusionDefinitionProvider } from './definitionProvider';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
@@ -32,6 +33,13 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
+
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(
+          { scheme: 'file', language: 'fusion' },
+          new FusionDefinitionProvider()
+        )
+      );
 }
 
 // this method is called when your extension is deactivated
