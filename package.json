@@ -63,6 +63,16 @@
         ],
         "capabilities": {
             "definitionProvider": "true"
+        },
+        "configuration": {
+            "title": "Neos Fusion",
+            "properties": {
+                "neosFusion.enableGoToDefinition": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable or disable the Go to Definition feature for Fusion prototypes."
+                }
+            }
         }
     },
     "activationEvents": [

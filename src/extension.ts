@@ -4,6 +4,10 @@
 import { FusionDefinitionProvider } from './definitionProvider';
 import * as vscode from 'vscode';
 
+// Global variable to store the disposable for the definition provider.
+// This allows us to properly clean up when the extension is deactivated.
+let definitionProviderDisposable: vscode.Disposable | undefined;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -34,14 +38,40 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 
+    function updateDefinitionProvider() {
+        if (definitionProviderDisposable) {
+            definitionProviderDisposable.dispose();
+            definitionProviderDisposable = undefined;
+        }
+
+        const config = vscode.workspace.getConfiguration('neosFusion');
+        const enableGoToDefinition = config.get('enableGoToDefinition', true);
+
+        if (enableGoToDefinition) {
+            definitionProviderDisposable = vscode.languages.registerDefinitionProvider(
+                { scheme: 'file', language: 'fusion' },
+                new FusionDefinitionProvider()
+            );
+            context.subscriptions.push(definitionProviderDisposable);
+        }
+    }
+
+    // Initial setup
+    updateDefinitionProvider();
+
+    // Listen for configuration changes
     context.subscriptions.push(
-        vscode.languages.registerDefinitionProvider(
-          { scheme: 'file', language: 'fusion' },
-          new FusionDefinitionProvider()
-        )
-      );
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('neosFusion.enableGoToDefinition')) {
+                updateDefinitionProvider();
+            }
+        })
+    );
 }
 
-// this method is called when your extension is deactivated
+// This method is called when the extension is deactivated
 export function deactivate() {
+    if (definitionProviderDisposable) {
+        definitionProviderDisposable.dispose();
+    }
 }

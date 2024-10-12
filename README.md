@@ -7,12 +7,19 @@ This extension adds language support for Fusion for [Neos CMS](https://www.neos.
 * Basic syntax highlighting for Fusion
 * [AFX](https://github.com/neos/fusion-afx) Syntax support
 * Code-Snippets for Fusion-Objects
-* Go to Definition support for Fusion prototypes
+* Go to Definition support for Fusion prototypes (can be disabled in settings)
+
+## Extension Settings
+
+This extension contributes the following settings:
+
+* `neosFusion.enableGoToDefinition`: Enable/disable the Go to Definition feature for Fusion prototypes.
 
 ## Release Notes
 
 ### 2.2.0 
 * Added "Go to Definition" functionality for Fusion prototypes
+  * This feature can be disabled in the extension settings
 
 ### 2.1.0 
 * Update dependencies
